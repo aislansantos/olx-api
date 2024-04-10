@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 import * as cors from "cors";
 import * as fileupload from "express-fileupload";
 import { mongoConnect } from "@/instances/mongo";
-import routes from "@/routes/routes";
+import apiRoutes from "@/routes/routes";
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ server.use(express.static(path.join(__dirname, "../public")));
 server.use(express.urlencoded({ extended: true }));
 server.use(fileupload());
 
-server.use(routes);
+server.use("/", apiRoutes);
 
 server.use((req: Request, res: Response) => {
   res.status(404);
