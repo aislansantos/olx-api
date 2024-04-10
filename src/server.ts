@@ -1,11 +1,5 @@
 import * as express from "express";
-import {
-  Request,
-  Response,
-  NextFunction,
-  ErrorRequestHandler,
-  json,
-} from "express";
+import { Request, Response, ErrorRequestHandler, json } from "express";
 import * as path from "path";
 import * as dotenv from "dotenv";
 import * as cors from "cors";
@@ -38,7 +32,6 @@ const errorHandler: ErrorRequestHandler = (
   err,
   req: Request,
   res: Response,
-  next: NextFunction,
 ) => {
   res.status(400); // Bad Request
   console.log(err);
