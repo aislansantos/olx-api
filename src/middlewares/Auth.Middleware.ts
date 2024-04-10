@@ -7,7 +7,11 @@ export const Auth = {
       return res.json({ notAllowed: true });
     }
 
-    let token: string | any = "";
+    let token: string = "";
+
+    if (typeof token != "string") {
+      return res.json({ notAllowed: true });
+    }
 
     if (req.query.token) {
       token = req.query.token;
