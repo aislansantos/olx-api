@@ -4,13 +4,15 @@ import * as AuthController from "@/controllers/Auth.Controller";
 import * as UserController from "@/controllers/User.controller";
 import * as AdsController from "@/controllers/Ads.Controller";
 
+import {Auth} from "@/middlewares/Auth.Middleware";
+
 const router = Router();
 
 router.get("/ping", (req: Request, res: Response) => {
-  res.json({ pong: true });
+  return res.json({ pong: true });
 });
 
-router.get("/states", UserController.getState);
+router.get("/states", Auth.private, UserController.getState);
 
 router.post("/user/signin", AuthController.signin);
 router.post("/user/signup", AuthController.signup);

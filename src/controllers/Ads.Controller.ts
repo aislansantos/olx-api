@@ -1,21 +1,11 @@
 import { Request, Response } from "express";
 
-export const getCategories = (req: Request, res: Response) => {
-  res.json({ pong: true });
-};
+export const getCategories = async (req: Request, res: Response) => {};
 
-export const addAction = (req: Request, res: Response) => {
-  res.json({ pong: true });
-};
+export const addAction = async (req: Request, res: Response) => {};
 
-export const getList = (req: Request, res: Response) => {
-  res.json({ pong: true });
-};
+export const getList = async (req: Request, res: Response) => {};
 
-export const getItem = (req: Request, res: Response) => {
-  res.json({ pong: true });
-};
+export const getItem = async (req: Request, res: Response) => {};
 
-export const editAction = (req: Request, res: Response) => {
-  res.json({ pong: true });
-};
+export const editAction = async (req: Request, res: Response) => {};
