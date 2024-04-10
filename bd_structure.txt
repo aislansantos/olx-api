@@ -1,0 +1,30 @@
+users
+- _id;
+- name;
+- email;
+- state;
+- passwordhash
+- token
+
+states
+- _id;
+- name;
+
+categoriers
+- _id;
+- name;
+- slug;
+
+ads -> anuncios
+- _id;
+- idUser;
+- state;
+- category;
+- images[{url, default: true}];
+- dateCreated;
+- title;
+- price;
+- priceNegotiable(default: true);
+- description;
+- views;
+- status;
