@@ -32,6 +32,7 @@ const errorHandler: ErrorRequestHandler = (
   err,
   req: Request,
   res: Response,
+  // next: NextFunction
 ) => {
   res.status(400); // Bad Request
   console.log(err);
