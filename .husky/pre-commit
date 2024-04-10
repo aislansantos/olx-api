@@ -1,0 +1,8 @@
+echo "Checked for linting errors and run tests before commmiting ..."
+
+
+npx lint-staged ||
+(echo "Linting errors of tests failed. Please fix them before commiting" && exit)
+
+
+echo "Done"
