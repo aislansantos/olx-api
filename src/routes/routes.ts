@@ -6,6 +6,8 @@ import * as AdsController from "@/controllers/Ads.Controller";
 
 import { Auth } from "@/middlewares/Auth.Middleware";
 
+import { AuthValidator } from "@/validators/Auth.Validator";
+
 const router = Router();
 
 router.get("/ping", (req: Request, res: Response) => {
@@ -15,7 +17,7 @@ router.get("/ping", (req: Request, res: Response) => {
 router.get("/states", UserController.getState);
 
 router.post("/user/signin", AuthController.signin);
-router.post("/user/signup", AuthController.signup);
+router.post("/user/signup", AuthValidator.signup, AuthController.signup);
 
 router.get("/user/me", Auth.private, UserController.info);
 router.put("/user/me", Auth.private, UserController.editAction);
