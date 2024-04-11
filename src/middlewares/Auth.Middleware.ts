@@ -9,18 +9,14 @@ export const Auth = {
 
     let token: string = "";
 
-    if (typeof token != "string") {
-      return res.json({ notAllowed: true });
-    }
-
-    if (req.query.token) {
+    if (typeof req.query.token === "string") {
       token = req.query.token;
     }
-    if (req.body.token) {
+    if (typeof req.body.token === "string") {
       token = req.body.token;
     }
 
-    if (token == "") {
+    if (token === "") {
       return res.json({ notAllowed: true });
     }
     const user = await User.findOne({ token });
