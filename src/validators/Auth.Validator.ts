@@ -18,11 +18,25 @@ export const AuthValidator = {
       isLength: {
         options: { min: 2 },
       },
-      errorMessage: "Senha precisa de pelo menos 2 caracteres.",
+      errorMessage: "Senha precisa de pelo menos 2 caracteres",
     },
     state: {
-        notEmpty: true,
-        errorMessage: "Estado não preenchido."
+      notEmpty: true,
+      errorMessage: "Estado não preenchido.",
+    },
+  }),
+
+  signin: checkSchema({
+    email: {
+      isEmail: true,
+      normalizeEmail: true,
+      errorMessage: "Email inválido",
+    },
+    password: {
+      isLength: {
+        options: { min: 2 },
+      },
+      errorMessage: "Senha precisa de pelo menos 2 caracteres",
     },
   }),
 };
