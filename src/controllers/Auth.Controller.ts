@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as AuthService from "@/services/Auth.Services";
+import * as AuthService from "@/services/Auth.Service";
 
 export const signin = async (req: Request, res: Response) => {
   const validation = await AuthService.validateSignin(req);
@@ -9,7 +9,7 @@ export const signin = async (req: Request, res: Response) => {
   }
   if ("status" in validation) {
     if (validation.token) {
-      return res.json({ token: validation.token });
+      return res.json({ token: validation.token, email: validation.email });
     } else {
       return res.json({ errors: validation.msg });
     }

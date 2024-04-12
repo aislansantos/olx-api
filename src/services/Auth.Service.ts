@@ -29,6 +29,9 @@ export const validateSignin = async (reqValidation: Request) => {
   const payload = (Date.now() + Math.random()).toString();
   const token = await bcrypt.hash(payload, 10);
 
+  user.token = token;
+  await user.save();
+
   return { token, email: data.email, status: true };
 };
 
