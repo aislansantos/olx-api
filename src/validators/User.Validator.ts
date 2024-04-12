@@ -1,5 +1,3 @@
-import { checkSchema } from "express-validator";
+// import { checkSchema } from "express-validator";
 
-export const UserValidator = {
-    
-};
+export const UserValidator = {};

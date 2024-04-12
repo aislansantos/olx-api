@@ -20,4 +20,4 @@ export const info = async (req: Request, res: Response) => {
   return res.json({ user });
 };
 
-export const editAction = async (req: Request, res: Response) => {};
+// export const editAction = async (req: Request, res: Response) => {};
