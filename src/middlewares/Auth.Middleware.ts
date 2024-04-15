@@ -3,7 +3,6 @@ import User from "@/models/User";
 
 export const Auth = {
   private: async (req: Request, res: Response, next: NextFunction) => {
-
     if (!req.query.token && !req.body.token) {
       return res.json({ notAllowed: true });
     }

@@ -38,6 +38,8 @@ export const validateSignin = async (reqValidation: Request) => {
 export const validateSignup = async (reqValidation: Request) => {
   const errors = validationResult(reqValidation);
 
+  console.log(errors);
+
   if (!errors.isEmpty()) {
     return { msg: errors.mapped(), status: false };
   }

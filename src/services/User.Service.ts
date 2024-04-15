@@ -1,3 +1,5 @@
+import { validationResult, matchedData } from "express-validator";
+import { Request } from "express";
 import User from "@/models/User";
 import Category from "@/models/Category";
 import Ads from "@/models/Ads";
@@ -35,4 +37,16 @@ export const info = async (token: string) => {
     state: state.name,
     ads: adslist,
   };
+};
+
+export const editAction = (dataReq: Request) => {
+  const errors = validationResult(dataReq);
+
+  if (!errors.isEmpty()) {
+    return { msg: errors.mapped(), status: false };
+  }
+
+  const data = matchedData(dataReq);
+
+  return data;
 };
