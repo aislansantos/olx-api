@@ -21,7 +21,7 @@ export const info = async (req: Request, res: Response) => {
 };
 
 export const editAction = async (req: Request, res: Response) => {
-  const validation = UserService.editAction(req);
+  const validation = await UserService.editAction(req);
 
   return res.json({ validation });
 };
