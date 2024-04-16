@@ -21,7 +21,11 @@ export const info = async (req: Request, res: Response) => {
 };
 
 export const editAction = async (req: Request, res: Response) => {
-  const validation = await UserService.editAction(req);
+  const data = await UserService.editAction(req);
 
-  return res.json({ validation });
+  if (!data) {
+    return res.json({ error: "Ocorreu algum tipo de erro" });
+  }
+
+  return res.json({ data });
 };
