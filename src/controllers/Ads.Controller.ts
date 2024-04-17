@@ -18,13 +18,21 @@ export const addAction = async (req: Request, res: Response) => {
 };
 
 export const getList = async (req: Request, res: Response) => {
-  const listAds = await AdsService.getList(req);
-  if (!listAds) {
-    return;
+  const { ads, total } = await AdsService.getList(req);
+  if (!ads) {
+    return res.status(404).json({ message: "Nenhum anúncio encontrado" });
   }
-  return res.json({ listAds });
+  return res.json({ ads, total });
 };
 
-// export const getItem = async (req: Request, res: Response) => {};
+export const getItem = async (req: Request, res: Response) => {
+  const item = await AdsService.getItem(req);
+
+  if (!item) {
+    return res.status(404).json({ message: item});
+  }
+
+  return res.json({ item });
+};
 
 // export const editAction = async (req: Request, res: Response) => {};
