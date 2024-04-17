@@ -112,7 +112,10 @@ export const addAction = async (dataAds: Request) => {
 };
 
 export const getList = async (dataReq: Request) => {
-  const { sort = "asc", offset = 0, limit = 8, q, cat, state } = dataReq.query;
+  // const { sort = "asc", offset = 0, limit = 8, q, cat, state } = dataReq.query;
+  const dataReqNew = dataReq;
+
+  console.log(dataReqNew);
 
   const adsData = await Ads.find({ status: true }).exec();
 
