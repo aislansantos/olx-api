@@ -1,9 +1,15 @@
 import { Schema, model, Model, connection } from "mongoose";
+
+interface Image {
+  url: string;
+  default: boolean;
+}
+
 type AdsType = {
   idUser: string;
   state: string;
   category: string;
-  images: object[];
+  images: Image[];
   dateCreated: Date;
   title: string;
   price: number;
@@ -17,7 +23,7 @@ const schema = new Schema<AdsType>({
   idUser: { type: String, required: true },
   state: { type: String, required: true },
   category: { type: String, required: true },
-  images: { type: [Object], required: true },
+  images: { type: [{ url: String, default: Boolean }], required: true },
   dateCreated: { type: Date, required: true },
   title: { type: String, required: true },
   price: { type: Number, required: true },
