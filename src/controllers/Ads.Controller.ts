@@ -17,7 +17,13 @@ export const addAction = async (req: Request, res: Response) => {
   return res.json({ ads });
 };
 
-// export const getList = async (req: Request, res: Response) => {};
+export const getList = async (req: Request, res: Response) => {
+  const listAds = await AdsService.getList(req);
+  if (!listAds) {
+    return;
+  }
+  return res.json({ listAds });
+};
 
 // export const getItem = async (req: Request, res: Response) => {};
 

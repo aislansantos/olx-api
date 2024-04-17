@@ -16,7 +16,7 @@ type AdsType = {
   priceNegotiable: boolean;
   description: string;
   views: number;
-  status: string;
+  status: boolean;
 };
 
 const schema = new Schema<AdsType>({
@@ -30,7 +30,7 @@ const schema = new Schema<AdsType>({
   priceNegotiable: { type: Boolean, required: true },
   description: { type: String, required: true },
   views: { type: Number, required: true },
-  status: { type: String, required: true },
+  status: { type: Boolean, required: true },
 });
 
 const modelName: string = "Ads";

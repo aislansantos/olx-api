@@ -80,7 +80,7 @@ export const addAction = async (dataAds: Request) => {
   }
 
   const newAds = new Ads();
-  newAds.status = "true";
+  newAds.status = true;
   newAds.idUser = idUser;
   newAds.state = user?.state ?? "";
   newAds.dateCreated = new Date();
@@ -106,9 +106,33 @@ export const addAction = async (dataAds: Request) => {
     newAds.images[0].default = true;
   }
 
-  console.log(newAds);
+  const info = await newAds.save();
 
-  // const info = await newAds.save();
+  return { id: info.id, status: true };
+};
 
-  // return { id: info.id, status: true };
+export const getList = async (dataReq: Request) => {
+  const { sort = "asc", offset = 0, limit = 8, q, cat, state } = dataReq.query;
+
+  const adsData = await Ads.find({ status: true }).exec();
+
+  const ads = [];
+  for (const i in adsData) {
+    let image;
+    const defaultImg = adsData[i].images.find((e) => e.default);
+    if (defaultImg) {
+      image = `${process.env.BASE}/media/${defaultImg.url}`;
+    } else {
+      image = `${process.env.BASE}/media/default.jpg`;
+    }
+
+    ads.push({
+      id: adsData[i]._id,
+      title: adsData[i].title,
+      price: adsData[i].price,
+      priceNegotiable: adsData[i].priceNegotiable,
+      image,
+    });
+  }
+  return ads;
 };
