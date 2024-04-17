@@ -175,8 +175,8 @@ export const getList = async (dataReq: Request) => {
 
 export const getItem = async (dataGetItem: Request) => {
   const { id } = dataGetItem.query;
-  let { other = false } = dataGetItem.query;
-  other = other === "true" ? true : false;
+  // let { other = false } = dataGetItem.query;
+  // other = other === "true" ? true : false;
 
   if (!id) {
     return "falta id do produto";
