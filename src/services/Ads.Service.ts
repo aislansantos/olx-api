@@ -88,6 +88,15 @@ export const addAction = async (dataAds: Request) => {
     };
   }
 
+  if (cat.length < 12) {
+    return { msg: "Id de categoria inválido", status: false };
+  }
+
+  const category = await Category.findById(cat);
+  if (!category) {
+    return { msg: "Categoria não existe", status: false };
+  }
+
   if (price) {
     price = price.replace(".", "").replace(",", ".").replace("R$ ", "");
     priceNumber = parseFloat(price);
