@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as AdsService from "@/services/Ads.Service";
+import Ads from "@/models/Ads";
 
 export const getCategories = async (req: Request, res: Response) => {
   const categories = await AdsService.getCategories();
@@ -29,10 +30,18 @@ export const getItem = async (req: Request, res: Response) => {
   const item = await AdsService.getItem(req);
 
   if (!item) {
-    return res.status(404).json({ message: item});
+    return res.status(404).json({ message: item });
   }
 
   return res.json({ item });
 };
 
-// export const editAction = async (req: Request, res: Response) => {};
+export const editAction = async (req: Request, res: Response) => {
+  const itemEdit = await AdsService.editAction(req);  
+
+  if (itemEdit.status === false) {
+    return res.status(404).json({ message: itemEdit.msg });
+  }
+
+  res.json({ itemEdit });
+};

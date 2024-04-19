@@ -1,7 +1,6 @@
 import { Buffer } from "buffer";
 import { v4 as uuidv4 } from "uuid";
 import * as jimp from "jimp";
-import * as fs from "fs";
 
 import Category from "@/models/Category";
 import Ads from "@/models/Ads";
@@ -28,18 +27,24 @@ interface RequestData {
 
 interface Filters {
   status: boolean;
-  title?: { $regex: string; $options: string }; // Tornamos title opcional
+  title?: { $regex: string; $options: string };
   category?: string;
   state?: string;
+}
+
+interface Updates {
+  title?: string;
+  price?: number;
+  priceNegotiable?: boolean;
+  status?: boolean;
+  description?: string;
+  category?: string;
+  images?: object;
 }
 
 const addImage = async (buffer: Buffer) => {
   const newName = `${uuidv4()}.jpg`;
   const directory = "./public/media";
-
-  if (!fs.existsSync(directory)) {
-    fs.mkdirSync(directory, { recursive: true });
-  }
 
   const tmpImg = await jimp.read(buffer);
   tmpImg.cover(500, 500).quality(80).write(`${directory}/${newName}`);
@@ -100,14 +105,22 @@ export const addAction = async (dataAds: Request) => {
   newAds.description = desc;
   newAds.views = 0;
 
+  const types = ["image/jpeg", "image/jpg", "image/png"];
+
   if (dataAds.files && dataAds.files.img) {
     const imgFiles = Array.isArray(dataAds.files.img)
       ? dataAds.files.img
       : [dataAds.files.img];
     for (const imgFile of imgFiles) {
-      const url = imgFile.data;
-      const imageName = await addImage(url);
-      newAds.images.push({ url: imageName, default: false });
+      if (types.includes(imgFile.mimetype)) {
+        const url = await addImage(imgFile.data);
+        newAds.images.push({ url, default: false });
+      } else {
+        return {
+          msg: "Formato de imagem inválido, anuncio não salvo",
+          status: false,
+        };
+      }
     }
   }
 
@@ -175,8 +188,8 @@ export const getList = async (dataReq: Request) => {
 
 export const getItem = async (dataGetItem: Request) => {
   const { id } = dataGetItem.query;
-  // let { other = false } = dataGetItem.query;
-  // other = other === "true" ? true : false;
+  let { other = false } = dataGetItem.query;
+  other = other === "true" ? true : false;
 
   if (!id) {
     return "falta id do produto";
@@ -203,6 +216,35 @@ export const getItem = async (dataGetItem: Request) => {
   const userInfo = await User.findById(ads.idUser).exec();
   const stateInfo = await State.findById(ads.state).exec();
 
+  //other para pegar mais anuncios daquele usuario
+  const others = [];
+  if (other) {
+    const otherData = await Ads.find({
+      status: true,
+      idUser: ads.idUser,
+    }).exec();
+
+    for (const i in otherData) {
+      if (otherData[i]._id.toString() != ads._id.toString()) {
+        let image = `${process.env.BASE}/media/default.jpg`;
+
+        const defaultImg = otherData[i].images.find((e) => e.default);
+
+        if (defaultImg) {
+          image = `${process.env.BASE}/media/${defaultImg.url}`;
+        }
+
+        others.push({
+          id: otherData[i]._id,
+          title: otherData[i].title,
+          price: otherData[i].price,
+          priceNegotiable: otherData[i].priceNegotiable,
+          image,
+        });
+      }
+    }
+  }
+
   return {
     id: ads._id,
     title: ads.title,
@@ -218,5 +260,99 @@ export const getItem = async (dataGetItem: Request) => {
       email: userInfo?.email,
     },
     stateName: stateInfo?.name,
+    others,
   };
+};
+
+export const editAction = async (dataItemEdit: Request) => {
+  const { id } = dataItemEdit.params;
+  const { title, status, priceneg, desc, cat, images, token } =
+    dataItemEdit.body;
+  let { price } = dataItemEdit.body;
+  let priceNumber = 0;
+
+  if (id.length < 12) {
+    return { msg: "ID inválido", status: false };
+  }
+
+  const ads = await Ads.findById(id).exec();
+  if (!ads) {
+    return { msg: "Anúncio inexistente", status: false };
+  }
+
+  const user = await User.findOne({ token }).exec();
+
+  if (user?._id.toString() !== ads.idUser.toString()) {
+    return { msg: "Este anúncio não é seu.", status: false };
+  }
+
+  const updates: Updates = {};
+
+  if (title) {
+    updates.title = title;
+  }
+
+  if (price) {
+    price = price.replace(".", "").replace(",", ".").replace("R$ ", "");
+    priceNumber = parseFloat(price);
+    console.log(priceNumber);
+
+    updates.price = priceNumber;
+  }
+
+  if (priceneg) {
+    updates.priceNegotiable = priceneg;
+  }
+
+  if (status) {
+    updates.status = status;
+  }
+
+  if (desc) {
+    updates.description = desc;
+  }
+
+  if (cat) {
+    const category = await Category.findOne({ slug: cat }).exec();
+    if (!category) {
+      return { msg: "Categoria não existe.", status: false };
+    }
+    updates.category = category._id.toString();
+  }
+
+  if (images) {
+    updates.images = images;
+  }
+
+  await Ads.findByIdAndUpdate(id, { $set: updates });
+
+  if (dataItemEdit.files && dataItemEdit.files.img) {
+    const itemEdit = await Ads.findById(id);
+    const types = ["image/jpeg", "image/jpg", "image/png"];
+    if (itemEdit) {
+      const imgFiles = Array.isArray(dataItemEdit.files.img)
+        ? dataItemEdit.files.img
+        : [dataItemEdit.files.img];
+      for (const i in imgFiles) {
+        if (types.includes(imgFiles[i].mimetype)) {
+          const url = await addImage(imgFiles[i].data);
+
+          itemEdit.images.push({
+            url,
+            default: false,
+          });
+        } else {
+          return {
+            msg: "Formato de imagem inválido, anuncio não salvo",
+            status: false,
+          };
+        }
+      }
+
+      itemEdit.save();
+    }
+  }
+  // TODO: novas imagens
+
+  return { msg: "Ads Alterado", status: true };
 };
