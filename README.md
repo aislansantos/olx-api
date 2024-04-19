@@ -38,20 +38,20 @@ método: post > rota:/ads/:id > Edita os dados do anúncio selecionado > autenti
 
 ##### Ads
 
-title: Titulo do anúncio;
-price: preço do item(R$ 0.000,00);
-priceneg: preço negociável(true/false);
-desc: descrição do anuncio;
-cat:categoria(id);
-token: hash do usuário logado;
-other: outros anuncios na lista(true/false);
+- title: Titulo do anúncio;
+- price: preço do item(R$ 0.000,00);
+- priceneg: preço negociável(true/false);
+- desc: descrição do anuncio;
+- cat:categoria(id);
+- token: hash do usuário logado;
+- other: outros anuncios na lista(true/false);
 
 ##### User
 
-name: pelo menos dois caracteres
-state: ID
-email: email em formato valido
-password: pelo menos 2 caracteres
+- name: pelo menos dois caracteres
+- state: ID
+- email: email em formato valido
+- password: pelo menos 2 caracteres
 
 ## Tecnologias
 
